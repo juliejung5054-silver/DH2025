@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DH 이해하기 랜딩 페이지</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for aesthetic appeal */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb; /* Light background */
+        }
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+        }
+        /* Specific gradient for the DH card */
+        .dh-card {
+            background: linear-gradient(135deg, #4c51bf 0%, #6366f1 100%);
+            color: white;
+            cursor: pointer;
+        }
+        .dh-card-icon {
+            color: #dbeafe; /* Light blue for icon */
+        }
+        .resource-link-hover:hover {
+            background-color: #eff6ff; /* Lightest blue on hover */
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10 min-h-screen">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
+                DH <span class="text-indigo-600">이해하기</span>
+            </h1>
+            <p class="text-xl text-gray-600">
+                디지털 시대의 인문학부터 AI의 작동 원리와 윤리까지, 핵심 지식을 탐구하세요.
+            </p>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div id="card-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
+            <!-- 1. 디지털 인문학 (DH) Card - Interactive -->
+            <div id="dh-card" class="dh-card p-6 rounded-xl card-shadow flex flex-col justify-between" onclick="toggleDHDetails()">
+                <div>
+                    <div class="text-3xl mb-4 dh-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M12 2l-2 3-5 1 2 5-1 5 5-2 5 2-1-5 2-5-5-1-2-3z"/><path d="M12 2v20"/><path d="M2 12h20"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">디지털 인문학의 이해</h2>
+                    <p class="text-indigo-100 text-sm">
+                        인문학 연구에 디지털 도구와 컴퓨팅 방법론을 적용하는 새로운 학문 영역을 탐구합니다.
+                    </p>
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <button id="dh-toggle-button" class="text-sm font-semibold py-1 px-3 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition">
+                        자세히 보기 (클릭)
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. AI 작동 원리 Card -->
+            <div class="bg-white p-6 rounded-xl card-shadow flex flex-col justify-between">
+                <div>
+                    <div class="text-3xl mb-4 text-pink-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M6 8L3 11l3 3"/><path d="M18 8l3 3-3 3"/><path d="M10 22L14 2"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">인공지능, 어떻게 움직이는가</h2>
+                    <p class="text-gray-500 text-sm">
+                        머신러닝, 딥러닝 등 AI의 핵심 개념과 작동 방식을 쉽게 풀어 설명합니다.
+                    </p>
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <!-- AI 작동 원리 카드의 링크를 ./02/index.html로 업데이트 -->
+                    <a href="./02/index.html" class="text-sm font-semibold text-pink-600 hover:text-pink-700 transition">
+                        더 알아보기 →
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. AI와 윤리 Card (Full width on mobile, starts new line on desktop) -->
+            <div class="bg-white p-6 rounded-xl card-shadow md:col-span-2 lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <div class="text-3xl mb-4 text-teal-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">AI 시대의 윤리적 고민</h2>
+                    <p class="text-gray-500 text-sm">
+                        데이터 편향, 투명성, 책임 등 AI가 사회에 미치는 필수적인 윤리 문제를 다룹니다.
+                    </p>
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <a href="#" class="text-sm font-semibold text-teal-600 hover:text-teal-700 transition">
+                        이슈 탐색하기 →
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Hidden Card for filling the 2-column layout on large screens -->
+            <div class="hidden lg:block lg:col-span-1">
+                <!-- Empty spacer or could be used for a 4th card -->
+            </div>
+
+        </div>
+        
+        <!-- Digital Humanities Details Section (Initially hidden) -->
+        <section id="dh-details" class="bg-white p-6 md:p-8 rounded-xl card-shadow border border-indigo-200 hidden transition-all duration-500 mt-8">
+            <h3 class="text-2xl font-extrabold text-indigo-700 mb-4 border-b pb-2">디지털 인문학 심화 자료</h3>
+            <p class="text-gray-600 mb-6">
+                '디지털 인문학의 이해'를 위한 보고서, 웹페이지, 오디오, 프레젠테이션 자료로 이동할 수 있습니다.
+            </p>
+
+            <div class="space-y-4">
+                <!-- Resource 1: Report Format Link -->
+                <a href="https://gemini.google.com/share/06ec2077fc9c" target="_blank" class="flex items-center p-4 rounded-lg resource-link-hover transition group">
+                    <div class="text-xl text-red-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 13l2 2 2-2"/></svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">보고서 양식: 디지털 인문학 연구 보고서 작성 가이드</p>
+                        <p class="text-sm text-gray-500">연구 결과를 정리하기 위한 표준 문서 양식입니다. <span class="group-hover:text-blue-500">→ 이동</span></p>
+                    </div>
+                </a>
+
+                <!-- Resource 2: Webpage Link -->
+                <a href="https://gemini.google.com/share/eb14cba863d1" target="_blank" class="flex items-center p-4 rounded-lg resource-link-hover transition group">
+                    <div class="text-xl text-green-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">웹페이지: DH 프로젝트 사례 연구 및 데이터 시각화</p>
+                        <p class="text-sm text-gray-500">실제 DH 프로젝트 사례와 시각화 자료를 확인할 수 있습니다. <span class="group-hover:text-blue-500">→ 이동</span></p>
+                    </div>
+                </a>
+
+                <!-- Resource 3: Audio File Link -->
+                <a href="https://gemini.google.com/share/91b53944bdca" target="_blank" class="flex items-center p-4 rounded-lg resource-link-hover transition group">
+                    <div class="text-xl text-orange-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><circle cx="12" cy="18" r="4"/><path d="M22 8.7A5 5 0 0 0 17 5h-2a5 5 0 0 0-5 3.7"/></svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">오디오 파일: DH 전문가 인터뷰</p>
+                        <p class="text-sm text-gray-500">디지털 전환과 인문학에 대한 전문가의 깊이 있는 논의를 들어보세요. <span class="group-hover:text-blue-500">→ 이동</span></p>
+                    </div>
+                </a>
+
+                <!-- Resource 4: PPT Link -->
+                <a href="https://gemini.google.com/share/843fc28761a7" target="_blank" class="flex items-center p-4 rounded-lg resource-link-hover transition group">
+                    <div class="text-xl text-blue-500 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 16v-4"/><path d="M10 14h4"/></svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">프레젠테이션 (PPT): 디지털 인문학 개론</p>
+                        <p class="text-sm text-gray-500">핵심 개념을 시각적으로 정리한 강의 자료입니다. <span class="group-hover:text-blue-500">→ 이동</span></p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // JavaScript for expanding the DH details section
+        function toggleDHDetails() {
+            const details = document.getElementById('dh-details');
+            const button = document.getElementById('dh-toggle-button');
+            const card = document.getElementById('dh-card');
+
+            // Toggle visibility
+            const isHidden = details.classList.contains('hidden');
+
+            if (isHidden) {
+                // Show content
+                details.classList.remove('hidden');
+                details.style.maxHeight = details.scrollHeight + 'px'; // Set max-height for potential transition
+                button.textContent = '숨기기';
+                card.classList.add('shadow-xl'); // Optional: make card stand out more when active
+            } else {
+                // Hide content
+                details.style.maxHeight = '0'; // Reset max-height
+                // Use a slight delay to allow any transition effects to complete before hiding
+                setTimeout(() => {
+                    details.classList.add('hidden');
+                }, 100); 
+                button.textContent = '자세히 보기 (클릭)';
+                card.classList.remove('shadow-xl');
+            }
+        }
+    </script>
+</body>
+</html>
