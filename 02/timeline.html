@@ -3,327 +3,543 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>독도에 대한 종합 브리핑</title>
+    <title>독도 연대표: 주요 사건 및 사료 타임라인</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Nanum+Gothic:wght@400;700;800&display=swap');
         :root {
-            --primary-color: #1e40af; /* Blue-700 */
-            --secondary-color: #3b82f6; /* Blue-500 */
-            --background-color: #f8fafc; /* Slate-50 */
-            --card-bg-color: #ffffff;
-            --text-color: #1f2937; /* Gray-800 */
-            --timeline-btn-color: #d946ef; /* Purple-500 */
+            --color-primary: #1d4ed8; /* Blue-700 */
+            --color-secondary: #3b82f6; /* Blue-500 */
+            --color-bg: #f9fafb; /* Gray-50 */
+            --color-text: #1f2937; /* Gray-800 */
         }
         body {
             font-family: 'Nanum Gothic', 'Inter', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            background-color: var(--color-bg);
+            color: var(--color-text);
         }
-        .header-bg {
-            background-color: var(--primary-color);
-            background-image: linear-gradient(135deg, var(--primary-color) 0%, #374151 100%);
+        .timeline-container {
+            position: relative;
         }
-        .accent-color {
-            color: var(--secondary-color);
+        /* Vertical line for the timeline */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 20px; /* Small offset for mobile */
+            width: 4px;
+            background-color: #e5e7eb; /* Gray-200 */
+            border-radius: 9999px;
         }
-        .btn-toggle {
-            transition: transform 0.3s ease;
+        /* Adjust line position for larger screens */
+        @media (min-width: 768px) {
+            .timeline-container::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
-        .rotated {
-            transform: rotate(90deg);
+        .timeline-item {
+            position: relative;
+            padding-left: 50px; /* Space for the circle */
+            margin-bottom: 30px;
         }
-        /* Custom scrollbar for better look */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Circle marker for each event */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            border: 4px solid var(--color-bg); /* Match background color */
+            z-index: 10;
         }
-        ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
-            border-radius: 10px;
+        /* Alternating layout for desktop */
+        @media (min-width: 768px) {
+            .timeline-item {
+                width: 50%;
+                padding-left: 0;
+                padding-right: 50px;
+            }
+            .timeline-item.right {
+                margin-left: 50%;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+            .timeline-item.right::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .timeline-item:nth-child(even):not(.right) {
+                text-align: right;
+            }
+            .timeline-item:nth-child(even):not(.right) .event-card {
+                margin-left: auto;
+            }
+            .timeline-item:nth-child(even):not(.right)::before {
+                left: unset;
+                right: -8px;
+            }
+            .timeline-item:nth-child(even):not(.right)::after {
+                right: 50px;
+                left: unset;
+            }
+            .timeline-item:nth-child(odd):not(.right) .event-card {
+                margin-right: auto;
+            }
         }
-        ::-webkit-scrollbar-track {
-            background: var(--background-color);
+        .event-card {
+            border-left: 4px solid var(--color-secondary);
+            transition: transform 0.2s;
         }
-        .timeline-btn {
-            background-color: var(--timeline-btn-color);
-            box-shadow: 0 4px 6px -1px rgba(217, 70, 239, 0.5), 0 2px 4px -2px rgba(217, 70, 239, 0.5);
-            transition: background-color 0.3s, transform 0.1s;
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .timeline-btn:hover {
-            background-color: #a855f7; /* Purple-600 */
-            transform: translateY(-1px);
+        .text-korea { color: #d946ef; /* Purple-500 */ }
+        .text-japan { color: #ef4444; /* Red-500 */ }
+        .text-external { color: #10b981; /* Emerald-500 */ }
+        .text-geography { color: #f59e0b; /* Amber-500 */ }
+
+        /* 뒤로가기 버튼 스타일 추가 */
+        .back-btn {
+            background-color: #f97316; /* Orange-500 */
+            transition: background-color 0.2s;
+        }
+        .back-btn:hover {
+            background-color: #ea580c; /* Orange-600 */
         }
     </style>
 </head>
-<body class="min-h-screen">
-    <div class="header-bg text-white shadow-xl">
-        <header class="max-w-7xl mx-auto p-6 md:p-10">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 leading-tight">
-                독도에 대한 종합 브리핑
+<body>
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-lg border-b sticky top-0 z-20">
+        <div class="max-w-6xl mx-auto p-4 md:p-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-900 flex items-center">
+                <span class="text-4xl mr-3 text-red-500">🇰🇷</span>
+                독도 관련 주요 사건 연대표
             </h1>
-            <p class="text-xl md:text-2xl font-light opacity-90 border-t border-white border-opacity-30 pt-4 mt-4">
-                지리, 역사, 갈등 그리고 평화적 해결 방안
-            </p>
-        </header>
-    </div>
-
-    <!-- Main Content Area -->
-    <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
-
-        <!-- 1. 핵심 요약 Card -->
-        <section id="summary" class="bg-card-bg-color p-6 md:p-8 rounded-2xl shadow-lg border-t-4 border-red-500">
-            <h2 class="text-2xl md:text-3xl font-bold mb-4 flex items-center accent-color">
-                핵심 요약
-            </h2>
-            <div class="text-gray-700 space-y-4 text-lg">
-                <p>본 문서는 독도의 지리적 특성, 역사적 영유권 근거, 그리고 현대 한일 갈등의 양상과 평화적 해결 방안을 종합적으로 분석합니다. 독도는 지리적으로 울릉도 생활권에 속하며, 지질학적으로도 울릉도와 동일한 기원을 공유합니다.</p>
-                <p>역사적으로는 **『세종실록지리지』, 대한제국 「칙령 제41호」** 등 한국의 수많은 고문헌과 고지도는 독도를 명백한 우리 영토로 기록하고 있으며, 심지어 일본의 **『은주시청합기』 (1667)**와 **「태정관 지령」 (1877)**조차 독도를 일본의 영토가 아니라고 명시했습니다. 일본의 1905년 편입 시도는 불법적인 시도였습니다.</p>
-                <p>현대의 갈등은 1951년 샌프란시스코 강화조약의 모호성에서 시작되었으며, 1998년 신한일 어업협정과 2005년 '다케시마의 날' 제정으로 재점화되었습니다. 성공적인 해결을 위해서는 감정적 대응을 넘어 역사적 사실에 기반한 논리적 접근과 학술 공동 연구, 민간 교류를 통한 상호 이해 증진이 필수적입니다.</p>
-            </div>
-        </section>
-
-        <!-- Interactive Content Sections -->
-        <div id="content-chapters" class="space-y-6">
-
-            <!-- Chapter 1: 지리적 및 생태적 가치 -->
-            <div class="chapter-card bg-card-bg-color rounded-2xl shadow-xl overflow-hidden">
-                <button class="w-full text-left p-6 md:p-8 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition duration-150" data-toggle="chapter-1">
-                    <h3 class="text-xl md:text-2xl font-bold accent-color">
-                        제1부: 독도의 지리적 및 생태적 가치
-                    </h3>
-                    <svg class="w-6 h-6 btn-toggle text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-                <div id="chapter-1-content" class="p-6 md:p-8 border-t border-gray-200 hidden">
-                    <div class="space-y-8">
-                        
-                        <!-- 위치와 구성 -->
-                        <div>
-                            <h4 class="text-xl font-bold border-b pb-2">위치와 구성</h4>
-                            <ul class="list-disc list-inside space-y-2 ml-4 mt-4">
-                                <li>**위성 좌표:** 북위 37° 14′ 26.8", 동경 131° 52′ 10.4" (동도 우산봉 기준)</li>
-                                <li>**지리적 인접성:** 울릉도에서는 육안 관측 가능, 일본 오키섬에서는 보이지 않음.</li>
-                                <li>**구성:** 동도, 서도 두 개의 주요 섬과 89개의 부속 바위섬.</li>
-                                <li>**행정 주소:** 경상북도 울릉군 울릉읍 독도리 이사부길 (동도) 및 안용복길 (서도).</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- 자연 환경 및 지질학적 특성 -->
-                        <div>
-                            <h4 class="text-xl font-bold border-b pb-2 pt-4">자연 환경 및 지질학적 특성</h4>
-                            <ul class="list-disc list-inside space-y-2 ml-4 mt-4">
-                                <li>**생성:** 약 460만 년 전 ~ 250만 년 전 화산 활동으로 형성 (울릉도보다 앞서 생성).</li>
-                                <li>**지질학적 연관성:** 울릉도와 해저에서 연결, 조면암이라는 동일 암석으로 구성.</li>
-                                <li>**대비:** 일본 오키섬은 화산 활동과 무관한 편마암으로, 독도와 지질학적 연관성이 없음.</li>
-                            </ul>
-                        </div>
-
-                        <!-- 경제적 및 전략적 가치 -->
-                        <div>
-                            <h4 class="text-xl font-bold border-b pb-2 pt-4">경제적 및 전략적 가치</h4>
-                            <ul class="list-disc list-inside space-y-2 ml-4 mt-4">
-                                <li>**어족 자원:** 한류와 난류가 교차하는 황금어장.</li>
-                                <li>**에너지 자원:** 가스 하이드레이트(메탄 수화물) 약 6억 톤 추정 매장 (대한민국 국민 약 30년 사용 가능량).</li>
-                                <li>**지정학적 가치:** 한반도, 일본, 러시아를 잇는 해상 운송 및 방위 거점.</li>
-                                <li>**경제적 가치:** 수산업, 관광업 (연간 약 520억 원 이상), 해양과학기지 역할.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chapter 2: 역사적 사료를 통해 본 독도 영유권 -->
-            <div class="chapter-card bg-card-bg-color rounded-2xl shadow-xl overflow-hidden">
-                <button class="w-full text-left p-6 md:p-8 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition duration-150" data-toggle="chapter-2">
-                    <h3 class="text-xl md:text-2xl font-bold accent-color">
-                        제2부: 역사적 사료를 통해 본 독도 영유권 (결정적 증거)
-                    </h3>
-                    <svg class="w-6 h-6 btn-toggle text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-                <div id="chapter-2-content" class="p-6 md:p-8 border-t border-gray-200 hidden">
-                    <h4 class="text-xl font-bold mb-4 border-b pb-2">한국과 일본의 고문헌 비교 (압도적 증거)</h4>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- 한국의 고문헌 및 고지도 기록 -->
-                        <div class="bg-blue-50 p-4 rounded-xl shadow-inner border border-blue-200">
-                            <h5 class="text-lg font-bold mb-3 text-blue-700">🇰🇷 한국 사료: 명백한 영유권 기록</h5>
-                            <div class="space-y-4 text-sm md:text-base">
-                                
-                                <div class="p-3 bg-white rounded-lg border">
-                                    <p class="font-semibold">『세종실록지리지』 (1454)</p>
-                                    <p class="text-gray-600 italic mt-1">"우산(于山)과 무릉(武陵) 두 섬이 서로 거리가 멀지 않아 날씨가 맑으면 바라볼 수 있다."</p>
-                                    <p class="text-xs mt-1">→ 울릉도와 독도의 존재 및 상호 가시성을 기록.</p>
-                                </div>
-                                <div class="p-3 bg-white rounded-lg border">
-                                    <p class="font-semibold">대한제국 「칙령 제41호」 (1900)</p>
-                                    <p class="text-gray-600 italic mt-1">"울릉전도와 죽도, **석도(石島, 독도)**를 관할 할 것."</p>
-                                    <p class="text-xs mt-1">→ 독도를 울릉군의 공식 관할 구역으로 선포.</p>
-                                </div>
-                                <div class="p-3 bg-white rounded-lg border">
-                                    <p class="font-semibold">안용복의 활동 (1693, 1696)</p>
-                                    <p class="text-gray-600 italic mt-1">일본으로 건너가 독도가 조선 땅임을 주장하며 월경 조업에 항의.</p>
-                                    <p class="text-xs mt-1">→ 일본 도쿠가와 막부의 **'도해 금지령'** (1696)을 이끌어냄.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 일본의 고문헌 및 고지도 기록 -->
-                        <div class="bg-red-50 p-4 rounded-xl shadow-inner border border-red-200">
-                            <h5 class="text-lg font-bold mb-3 text-red-700">🇯🇵 일본 사료: 독도가 일본 땅이 아님을 인정</h5>
-                            <div class="space-y-4 text-sm md:text-base">
-                                <div class="p-3 bg-white rounded-lg border">
-                                    <p class="font-semibold">『은주시청합기』 (1667)</p>
-                                    <p class="text-gray-600 italic mt-1">"본주의 서쪽 끝은 오키섬을 경계로 한다."</p>
-                                    <p class="text-xs mt-1">→ 독도와 울릉도를 일본의 경계 밖으로 규정.</p>
-                                </div>
-                                <div class="p-3 bg-white rounded-lg border">
-                                    <p class="font-semibold">「태정관 지령」 (1877)</p>
-                                    <p class="text-gray-600 italic mt-1">"죽도(울릉도) 외 1도(독도)의 건에 대해서 **본방(일본)은 관계가 없다는 것을 명심할 것**."</p>
-                                    <p class="text-xs mt-1">→ 일본 최고 행정기관이 독도가 일본과 무관함을 공식 확인.</p>
-                                </div>
-                                <div class="p-3 bg-white rounded-lg border">
-                                    <p class="font-semibold">하야시 시헤이의 『삼국접양지도』 (1785)</p>
-                                    <p class="text-gray-600 italic mt-1">울릉도와 독도를 조선과 동일한 황색으로 칠하고 **'조선의 것'**이라고 명기.</p>
-                                    <p class="text-xs mt-1">→ 일본 학자가 독도를 조선 영토로 명확히 표시.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 p-4 bg-yellow-100 rounded-xl border border-yellow-300">
-                        <h5 class="font-bold text-lg text-yellow-700">📌 일본 영유권 주장의 근거 (시마네현 고시 제40호)</h5>
-                        <p class="text-gray-700 mt-2">1905년 **러일전쟁 중** 주인이 없는 땅을 선점한다는 명분으로 이루어진 불법적인 편입 시도로, 역사적 근거가 부족합니다.</p>
-                    </div>
-
-                </div>
-            </div>
-            
-            <!-- 연표 버튼 추가 위치 -->
-            <div class="flex justify-center py-4">
-                <a href="dokdo_timeline.html" target="_blank" class="timeline-btn text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    독도 주요사건 기록 연표 보기 (Timeline)
-                </a>
-            </div>
-            <!-- 연표 버튼 추가 끝 -->
-
-
-            <!-- Chapter 3: 현대의 갈등과 평화적 해결 모색 -->
-            <div class="chapter-card bg-card-bg-color rounded-2xl shadow-xl overflow-hidden">
-                <button class="w-full text-left p-6 md:p-8 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition duration-150" data-toggle="chapter-3">
-                    <h3 class="text-xl md:text-2xl font-bold accent-color">
-                        제3부: 현대의 갈등 양상 및 평화적 해결 모색
-                    </h3>
-                    <svg class="w-6 h-6 btn-toggle text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-                <div id="chapter-3-content" class="p-6 md:p-8 border-t border-gray-200 hidden">
-
-                    <h4 class="text-xl font-bold mb-4 border-b pb-2">갈등의 주요 사건 연대</h4>
-
-                    <ol class="relative border-l border-gray-200 ml-3 space-y-8">
-                        <!-- 사건 1: 샌프란시스코 강화조약 -->
-                        <li class="mb-10 ml-6">
-                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">
-                                <span class="text-blue-600 font-bold text-xs">51</span>
-                            </span>
-                            <h5 class="mb-1 text-lg font-semibold text-gray-900">1951년: 샌프란시스코 강화조약의 모호성</h5>
-                            <p class="text-base font-normal text-gray-600">일본의 로비 활동으로 최종 조약문에 독도 귀속 명문 규정 삭제. 일본이 이 모호성을 빌미로 영유권 주장 시작.</p>
-                        </li>
-                        <!-- 사건 2: 이승만 라인 선포 -->
-                        <li class="mb-10 ml-6">
-                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">
-                                <span class="text-blue-600 font-bold text-xs">52</span>
-                            </span>
-                            <h5 class="mb-1 text-lg font-semibold text-gray-900">1952년: 평화선 (이승만 라인) 선포</h5>
-                            <p class="text-base font-normal text-gray-600">한국 정부가 해양 주권 수호 및 어족자원 보호를 위해 독도를 포함하는 평화선 선포, 실효적 지배 강화.</p>
-                        </li>
-                         <!-- 사건 3: 신한일 어업협정 -->
-                        <li class="mb-10 ml-6">
-                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">
-                                <span class="text-blue-600 font-bold text-xs">98</span>
-                            </span>
-                            <h5 class="mb-1 text-lg font-semibold text-gray-900">1998년: 신한일 어업협정</h5>
-                            <p class="text-base font-normal text-gray-600">독도가 한일 **'중간수역'**에 포함되어 한국 내에서 영유권 훼손 논란 발생.</p>
-                        </li>
-                        <!-- 사건 4: 다케시마의 날 제정 & 교과서 왜곡 -->
-                        <li class="mb-10 ml-6">
-                            <span class="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-8 ring-white">
-                                <span class="text-red-600 font-bold text-xs">05</span>
-                            </span>
-                            <h5 class="mb-1 text-lg font-semibold text-gray-900">2005년: '다케시마의 날' 제정 및 교과서 왜곡 심화</h5>
-                            <p class="text-base font-normal text-gray-600">시마네현이 어민 불만을 배경으로 '다케시마의 날' 조례 제정. 일본 교과서는 독도가 '일본 고유의 영토'이며 '한국이 불법 점거'한다는 왜곡된 교육을 확대.</p>
-                        </li>
-                    </ol>
-
-                    <h4 class="text-xl font-bold mt-8 mb-4 border-b pb-2">평화적 해결을 위한 제언</h4>
-                    <ul class="list-none space-y-4">
-                        <li class="flex items-start">
-                            <span class="text-blue-500 font-bold mr-3 text-xl">1.</span>
-                            <p class="text-gray-700"><strong class="text-lg">정확한 역사적 사실 기반 접근:</strong> 감정적 대응이 아닌, 역사적 사료와 논리에 근거한 독도 영유권의 정당성을 이해하고 주장해야 합니다.</p>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-blue-500 font-bold mr-3 text-xl">2.</span>
-                            <p class="text-gray-700"><strong class="text-lg">학술적·민간 교류 활성화:</strong> 한일역사공동연구위원회와 같은 **공동 연구**를 지속하고, 미래 지향적 관계를 위한 민간 차원의 교류를 확대해야 합니다.</p>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-blue-500 font-bold mr-3 text-xl">3.</span>
-                            <p class="text-gray-700"><strong class="text-lg">미래 세대의 인식 전환:</strong> 양국 청소년들이 직접 역사 갈등을 토론하고 **동아시아 평화**라는 공동 목표를 위해 문제 해결적 관점으로 전환하는 교육이 필요합니다.</p>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-            
+            <!-- 브리핑 페이지로 돌아가는 버튼 추가 -->
+            <a href="dokdo_briefing.html" class="back-btn text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center text-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                브리핑 돌아가기
+            </a>
         </div>
-    </main>
+        <p class="text-gray-500 mt-1 max-w-6xl mx-auto px-4 pb-2">제공된 타임라인 자료를 기반으로 한 역사적 흐름입니다.</p>
+    </header>
+
+    <!-- Main Timeline Content -->
+    <div class="max-w-6xl mx-auto py-8 md:py-12 px-4">
+        <div class="timeline-container">
+
+            <!-- Event 1: 선사 시대 (지리적 특성) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-geography">선사 시대</div>
+                    <p class="text-sm font-semibold text-gray-600">460 ~ 250만 년 전</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">독도</span>, 화산 활동으로 형성된 화산섬
+                        <span class="text-xs text-gray-500">(울릉도는 250만 년 전)</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-geography">지리적 특성</span>
+                </div>
+            </div>
+
+            <!-- Event 2: 세종실록지리지 (한국 사료) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">조선 시대</div>
+                    <p class="text-sm font-semibold text-gray-600">1454년</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">『세종실록지리지』</span>에 <span class="underline">우산(독도)과 무릉(울릉)이</span> 울진현 동쪽 바다에 있으며, 날씨가 맑으면 <span class="font-bold">바라볼 수 있다고 기록됨.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국 사료</span>
+                </div>
+            </div>
+
+            <!-- Event 3: 신증동국여지승람 (한국 사료) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">조선 시대</div>
+                    <p class="text-sm font-semibold text-gray-600">1531년</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">『신증동국여지승람』</span>에 우산도와 울릉도가 고을 바로 동쪽 바다 가운데 있다고 기술됨.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국 사료</span>
+                </div>
+            </div>
+
+            <!-- Event 4: 은주시청합기 (일본 사료) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본의 고문서</div>
+                    <p class="text-sm font-semibold text-gray-600">1667년</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">『은주시청합기』</span> 기록: "본주(일본 본토)의 서쪽 끝은 오키섬을 경계로 한다"고 명시하며, <span class="font-bold text-red-700">독도가 조선 땅임을 분명히 함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 사료 (조선 영토 인정)</span>
+                </div>
+            </div>
+
+            <!-- Event 5: 1차 안용복 사건 (안용복 사건) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">조선 시대</div>
+                    <p class="text-sm font-semibold text-gray-600">1693년 3월</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">1차 안용복 사건</span> 발생. 안용복이 울릉도와 독도가 조선 땅임을 주장하며 일본 어부의 월경 조업에 <span class="font-bold">항의함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">안용복 사건</span>
+                </div>
+            </div>
+
+            <!-- Event 6: 도해 금지령 (일본 사료) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본 막부의 인정</div>
+                    <p class="text-sm font-semibold text-gray-600">1695년</p>
+                    <p class="text-gray-800">
+                        일본 막부가 돗토리번의 답변서를 통해 <span class="font-bold">죽도(울릉도) 도해 금지령</span>을 내려, 울릉도와 독도가 <span class="font-bold text-red-700">일본 소속이 아님을 인정.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 사료</span>
+                </div>
+            </div>
+            
+            <!-- Event 7: 2차 안용복 사건 (안용복 사건) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">조선 시대</div>
+                    <p class="text-sm font-semibold text-gray-600">1696년</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">2차 안용복 사건</span> 발생. 안용복이 '울릉자산양도감세장' 깃발을 달고 일본으로 건너가 독도가 조선 땅임을 <span class="font-bold">재차 주장함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">안용복 사건</span>
+                </div>
+            </div>
+
+            <!-- Event 8: 울릉도 수토관 제도 (조선의 대응) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">조선의 대응 강화</div>
+                    <p class="text-sm font-semibold text-gray-600">1697년</p>
+                    <p class="text-gray-800">
+                        안용복 사건의 영향으로 조선이 <span class="font-bold">울릉도 수토관 제도</span>를 신설하여 울릉도와 주변 섬에 수토관을 파견하여 <span class="font-bold">영토 관리를 강화함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">조선의 대응</span>
+                </div>
+            </div>
+            
+             <!-- Event 9: 개정일본여지로정전도 (일본 지도) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본 지도</div>
+                    <p class="text-sm font-semibold text-gray-600">1779년</p>
+                    <p class="text-gray-800">
+                        나가쿠보 세키스이가 제작한 <span class="font-bold">『개정 일본여지로정전도』</span>에서 울릉도와 독도가 <span class="font-bold text-red-700">채색되어 있지 않아 일본 영역 밖의 섬으로 나타남.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 지도</span>
+                </div>
+            </div>
+
+            <!-- Event 10: 삼국접양지도 (일본 지도) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본 실학자의 증언</div>
+                    <p class="text-sm font-semibold text-gray-600">1785년</p>
+                    <p class="text-gray-800">
+                        하야시 시헤이의 <span class="font-bold">『삼국접양지도』</span>에서 울릉도와 독도를 조선과 동일한 황색으로 표시하고 <span class="font-bold text-red-700">'조선의 것'이라고 명시함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 지도</span>
+                </div>
+            </div>
+
+            <!-- Event 11: 만기요람 (한국 사료) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">조선 시대</div>
+                    <p class="text-sm font-semibold text-gray-600">1808년</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">『만기요람』</span>에 우산(독도)은 왜인들이 말하는 <span class="font-bold">송도(松島)라고 기록</span>하여, 독도의 명칭을 명확히 함.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국 사료</span>
+                </div>
+            </div>
+
+            <!-- Event 12: 조선국 교제시말 내탐서 (일본 사료) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본 메이지 정부</div>
+                    <p class="text-sm font-semibold text-gray-600">1870년</p>
+                    <p class="text-gray-800">
+                        일본 메이지 정부가 작성한 <span class="font-bold">『조선국 교제시말 내탐서』</span>에서 울릉도와 송도(독도)가 <span class="font-bold text-red-700">조선에 속하게 된 사정을 밝힘.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 사료</span>
+                </div>
+            </div>
+
+            <!-- Event 13: 태정관 지령 (일본 사료) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">결정적 일본 공식 기록</div>
+                    <p class="text-sm font-semibold text-gray-600">1877년</p>
+                    <p class="text-gray-800">
+                        일본 최고 행정기관인 <span class="font-bold">태정관(太政官) 지령</span>을 통해 "죽도(울릉도) 외 1도(독도)의 건에 대해 <span class="font-bold text-red-700">본방(일본)은 관계가 없다는 것을 명심할 것"</span>이라는 지시가 하달됨.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 사료</span>
+                </div>
+            </div>
+
+            <!-- Event 14: 대한제국 칙령 제41호 (한국 공식 기록) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">대한제국의 영토 확립</div>
+                    <p class="text-sm font-semibold text-gray-600">1900년 10월 25일</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">대한제국 「칙령 제41호」</span> 공포. 울도 군청 구역을 울릉 전도와 죽도, <span class="font-bold text-purple-700">석도(독도)</span>로 관할함을 국내외적으로 공포함.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국 공식 기록</span>
+                </div>
+            </div>
+            
+            <!-- Event 15: 일본 독도 편입 각의 결정 (일본 편입 시도) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본의 불법 편입 시도</div>
+                    <p class="text-sm font-semibold text-gray-600">1905년 1월 28일</p>
+                    <p class="text-gray-800">
+                        일본 내각이 독도 편입을 결정하는 <span class="font-bold">각의 결정</span>을 함.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 편입 시도</span>
+                </div>
+            </div>
+
+            <!-- Event 16: 시마네현 고시 제40호 (일본 편입 시도) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본의 불법 편입 시도</div>
+                    <p class="text-sm font-semibold text-gray-600">1905년 2월 22일</p>
+                    <p class="text-gray-800">
+                        일본 <span class="font-bold">시마네현 고시 제40호</span>를 통해 독도를 '다케시마'로 개칭하고 시마네현 오키도사에 편입시킴.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">일본 편입 시도</span>
+                </div>
+            </div>
+
+            <!-- Event 17: 독도 편입 통보 (한국의 인지) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">한국의 인지</div>
+                    <p class="text-sm font-semibold text-gray-600">1906년 4월 4일</p>
+                    <p class="text-gray-800">
+                        시마네현 관리들이 울릉군수 심흥택에게 독도가 일본에 <span class="font-bold">편입되었음을 통보.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국의 인지</span>
+                </div>
+            </div>
+            
+            <!-- Event 18: 대한제국 의정부 지령 3호 (한국의 대응) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">한국의 공식 대응</div>
+                    <p class="text-sm font-semibold text-gray-600">1906년 5월 20일</p>
+                    <p class="text-gray-800">
+                        대한제국 의정부 참정대신이 <span class="font-bold">「지령 3호」</span>를 통해 독도 영지(일본 영토) 주장은 <span class="font-bold text-purple-700">근거가 없음을 지시함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국의 대응</span>
+                </div>
+            </div>
+
+            <!-- Event 19: SCAPIN 제677호 (전후 처리) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-external">제2차 세계대전 이후</div>
+                    <p class="text-sm font-semibold text-gray-600">1946년 1월 29일</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">연합군최고사령관 지령(SCAPIN) 제677호</span> 발표. 일본의 주권 행사 범위에서 <span class="font-bold text-green-700">독도를 한국 영토로 표시함.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-external">전후 처리</span>
+                </div>
+            </div>
+
+            <!-- Event 20: 샌프란시스코 강화조약 1차 초안 (전후 처리) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-external">전후 처리</div>
+                    <p class="text-sm font-semibold text-gray-600">1947년 3월 20일</p>
+                    <p class="text-gray-800">
+                        샌프란시스코 강화조약 <span class="font-bold">1차 초안</span>에 리앙쿠르암(독도)을 포함한 섬들이 <span class="font-bold text-green-700">한국에 반환될 섬으로 명시됨.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-external">전후 처리</span>
+                </div>
+            </div>
+
+            <!-- Event 21: 이승만 라인 선포 (한국의 실효적 지배) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">한국의 실효적 지배</div>
+                    <p class="text-sm font-semibold text-gray-600">1951년 1월 18일</p>
+                    <p class="text-gray-800">
+                        한국 정부, <span class="font-bold">‘이승만 라인’(평화선) 선포.</span> 독도를 기점 8해리를 영해로 간주하고 일본 어선을 단속하며 주권을 행사.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국의 실효적 지배</span>
+                </div>
+            </div>
+
+            <!-- Event 22: 샌프란시스코 강화조약 최종 체결 (전후 처리) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-external">갈등의 씨앗</div>
+                    <p class="text-sm font-semibold text-gray-600">1951년 9월 8일</p>
+                    <p class="text-gray-800">
+                        샌프란시스코 강화조약 최종 체결. 일본의 로비로 <span class="font-bold text-red-700">독도가 한국에 반환될 섬 목록에서 제외</span>되어 갈등의 빌미를 제공.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-external">전후 처리</span>
+                </div>
+            </div>
+
+            <!-- Event 23: 독도순라반 활동 시작 (한국의 실효적 지배) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">한국의 실효적 지배</div>
+                    <p class="text-sm font-semibold text-gray-600">1953년 7월</p>
+                    <p class="text-gray-800">
+                        울릉경찰서 <span class="font-bold">‘독도순라반’ 활동 시작.</span> 이후 독도의용수비대원 일부를 특채하여 독도경비대의 모체가 됨.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국의 실효적 지배</span>
+                </div>
+            </div>
+
+            <!-- Event 24: 일본, 국제사법재판소 제안 (외교적 갈등) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">일본의 외교적 시도</div>
+                    <p class="text-sm font-semibold text-gray-600">1954년 9월, 1962년 3월</p>
+                    <p class="text-gray-800">
+                        일본 정부, 독도 문제를 <span class="font-bold">국제사법재판소에 회부하자고 제안</span>했으나 한국 정부는 거부함.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">외교적 갈등</span>
+                </div>
+            </div>
+
+            <!-- Event 25: 한일국교정상화 기본조약 (외교적 합의) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-external">외교적 합의</div>
+                    <p class="text-sm font-semibold text-gray-600">1965년 6월</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">한일국교정상화 기본조약 체결.</span> 양국은 독도 문제를 <span class="font-bold">조약에서 언급하지 않기로 합의</span>함.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-external">외교적 합의</span>
+                </div>
+            </div>
+
+            <!-- Event 26: 최초 독도 주민 최종덕 (한국의 실효적 지배) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">유인도화(有人島化)</div>
+                    <p class="text-sm font-semibold text-gray-600">1981년</p>
+                    <p class="text-gray-800">
+                        최초의 독도 주민 <span class="font-bold">최종덕이 독도로 주민등록을 이전</span>하여 독도를 유인도(有人島)로 만듦.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">한국의 실효적 지배</span>
+                </div>
+            </div>
+
+            <!-- Event 27: 신한일 어업협정 (갈등의 재점화) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-external">갈등의 재점화</div>
+                    <p class="text-sm font-semibold text-gray-600">1998년 9월</p>
+                    <p class="text-gray-800">
+                        <span class="font-bold">신한일 어업협정 체결.</span> 독도가 한일 <span class="font-bold text-red-700">중간수역(잠정수역)에 설정</span>되어 영유권 훼손 논란을 일으킴.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700">갈등의 재점화</span>
+                </div>
+            </div>
+
+            <!-- Event 28: 독도수호대 창설 (민간 활동) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">민간 활동</div>
+                    <p class="text-sm font-semibold text-gray-600">2000년 3월</p>
+                    <p class="text-gray-800">
+                        신한일 어업협정을 계기로 시민단체 <span class="font-bold">독도수호대가 만들어짐.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">민간 활동</span>
+                </div>
+            </div>
+
+            <!-- Event 29: 다케시마의 날 제정 (갈등의 재점화) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">갈등의 재점화</div>
+                    <p class="text-sm font-semibold text-gray-600">2005년 3월 16일</p>
+                    <p class="text-gray-800">
+                        시마네현 의회가 매년 2월 22일을 <span class="font-bold text-red-700">'다케시마의 날'</span>로 정하는 조례를 결정.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700">갈등의 재점화</span>
+                </div>
+            </div>
+
+            <!-- Event 30: 일본 교과서 왜곡 지침 (교육적 왜곡) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">교육적 왜곡 심화</div>
+                    <p class="text-sm font-semibold text-gray-600">2008년</p>
+                    <p class="text-gray-800">
+                        일본 문부과학성, 학습지도요령을 통해 공식적으로 <span class="font-bold text-red-700">'다케시마는 일본의 영토'</span>라고 가르치도록 주문.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">교육적 왜곡</span>
+                </div>
+            </div>
+
+            <!-- Event 31: 독도연구소 창설 (정부 활동) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-korea">정부 활동</div>
+                    <p class="text-sm font-semibold text-gray-600">2008년</p>
+                    <p class="text-gray-800">
+                        독도 관련 조사, 연구, 정책 개발을 위한 정부 연구기관인 <span class="font-bold">독도연구소가 만들어짐.</span>
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-korea">정부 활동</span>
+                </div>
+            </div>
+
+            <!-- Event 32: 중학교 교과서 왜곡 심화 (교육적 왜곡) -->
+            <div class="timeline-item right">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">교육적 왜곡 심화</div>
+                    <p class="text-sm font-semibold text-gray-600">2011년</p>
+                    <p class="text-gray-800">
+                        일본 중학교 교과서 18종 중 14종이 독도를 <span class="font-bold text-red-700">'일본 고유의 영토'</span>로 서술.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">교육적 왜곡</span>
+                </div>
+            </div>
+
+            <!-- Event 33: 초등학교 교과서 왜곡 심화 (교육적 왜곡) -->
+            <div class="timeline-item">
+                <div class="event-card bg-white rounded-xl shadow-md p-4 space-y-2">
+                    <div class="font-extrabold text-xl text-japan">교육적 왜곡 심화</div>
+                    <p class="text-sm font-semibold text-gray-600">2015년판</p>
+                    <p class="text-gray-800">
+                        일본 초등학교 교과서 4종 모두 <span class="font-bold text-red-700">'일본의 영토, 한국이 불법으로 점거'</span>라는 기술을 포함.
+                    </p>
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-japan">교육적 왜곡</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="mt-12 p-6 text-center text-sm text-gray-500 border-t">
-        <p>본 자료는 독도 문제에 대한 종합적인 이해를 돕기 위해 작성되었습니다. 모든 역사적 사실은 공인된 문헌에 근거합니다.</p>
+        <p>타임라인은 제공된 '독도 관련 주요 사건 및 사료 타임라인' 자료에 기초하여 작성되었습니다.</p>
     </footer>
-
-    <!-- JavaScript for Interactivity -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const chapterCards = document.querySelectorAll('.chapter-card button[data-toggle]');
-
-            chapterCards.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetId = button.getAttribute('data-toggle');
-                    const targetContent = document.getElementById(targetId + '-content');
-                    const toggleIcon = button.querySelector('.btn-toggle');
-                    
-                    if (targetContent.classList.contains('hidden')) {
-                        // Close all other open sections
-                        document.querySelectorAll('.chapter-card div[id$="-content"]').forEach(content => {
-                            if (content.id !== targetContent.id && !content.classList.contains('hidden')) {
-                                content.classList.add('hidden');
-                                content.previousElementSibling.querySelector('.btn-toggle').classList.remove('rotated');
-                                content.previousElementSibling.setAttribute('aria-expanded', 'false');
-                            }
-                        });
-
-                        // Open the clicked section
-                        targetContent.classList.remove('hidden');
-                        button.setAttribute('aria-expanded', 'true');
-                        toggleIcon.classList.add('rotated');
-                    } else {
-                        // Close the clicked section
-                        targetContent.classList.add('hidden');
-                        button.setAttribute('aria-expanded', 'false');
-                        toggleIcon.classList.remove('rotated');
-                    }
-                });
-            });
-
-            // Initial setup for accessibility
-            chapterCards.forEach(button => {
-                const targetId = button.getAttribute('data-toggle');
-                button.setAttribute('aria-controls', targetId + '-content');
-                button.setAttribute('aria-expanded', 'false');
-            });
-        });
-    </script>
 </body>
 </html>
